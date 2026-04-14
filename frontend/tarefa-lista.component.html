@@ -1,0 +1,73 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <h1>Task Manager</h1>
+      </div>
+      <a routerLink="/tarefas/nova" class="btn btn-primary">
+        <span>+</span> Nova Tarefa
+      </a>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <!-- Mensagem de feedback -->
+    <div *ngIf="mensagem" class="alert" [ngClass]="'alert-' + mensagem.tipo">
+      {{ mensagem.texto }}
+    </div>
+
+    <!-- Filtro -->
+    <div class="filtro-bar">
+      <label class="filtro-label">Filtrar por status:</label>
+      <div class="filtro-buttons">
+        <button class="filtro-btn" [class.ativo]="filtroStatus === ''" (click)="filtroStatus = ''; filtrar()">
+          Todos
+        </button>
+        <button class="filtro-btn" [class.ativo]="filtroStatus === 'Pendente'" (click)="filtroStatus = 'Pendente'; filtrar()">
+          🕐 Pendente
+        </button>
+        <button class="filtro-btn" [class.ativo]="filtroStatus === 'Concluída'" (click)="filtroStatus = 'Concluída'; filtrar()">
+          ✅ Concluída
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div *ngIf="carregando" class="estado-vazio">
+      <div class="spinner"></div>
+      <p>Carregando tarefas...</p>
+    </div>
+
+    <!-- Lista vazia -->
+    <div *ngIf="!carregando && tarefas.length === 0" class="estado-vazio">
+      <div class="empty-icon">📋</div>
+      <p>Nenhuma tarefa encontrada.</p>
+      <a routerLink="/tarefas/nova" class="btn btn-primary">Criar primeira tarefa</a>
+    </div>
+
+    <!-- Grid de tarefas -->
+    <div *ngIf="!carregando && tarefas.length > 0" class="tarefas-grid">
+      <div *ngFor="let tarefa of tarefas" class="tarefa-card" [class.concluida]="tarefa.status === 'Concluída'">
+        <div class="card-header">
+          <span class="status-badge" [ngClass]="tarefa.status === 'Concluída' ? 'badge-concluida' : 'badge-pendente'">
+            {{ tarefa.status === 'Concluída' ? '✅' : '🕐' }} {{ tarefa.status }}
+          </span>
+          <span class="data">{{ tarefa.dataCriacao | date:'dd/MM/yyyy' }}</span>
+        </div>
+
+        <h3 class="card-titulo">{{ tarefa.titulo }}</h3>
+        <p class="card-descricao">{{ tarefa.descricao || 'Sem descrição.' }}</p>
+
+        <div class="card-actions">
+          <a [routerLink]="['/tarefas/editar', tarefa.id]" class="btn btn-secondary btn-sm">
+            ✏️ Editar
+          </a>
+          <button class="btn btn-danger btn-sm" (click)="excluir(tarefa.id!, tarefa.titulo)">
+            🗑️ Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

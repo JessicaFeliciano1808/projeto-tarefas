@@ -1,0 +1,81 @@
+<div class="page">
+  <header class="page-header">
+    <div class="header-content">
+      <div class="brand">
+        <span class="brand-icon">✦</span>
+        <h1>Task Manager</h1>
+      </div>
+      <a routerLink="/tarefas" class="btn btn-secondary">← Voltar</a>
+    </div>
+  </header>
+
+  <main class="page-main">
+    <div class="form-wrapper">
+      <div class="form-hero">
+        <h2>{{ isEdicao ? '✏️ Editar Tarefa' : '✦ Nova Tarefa' }}</h2>
+        <p>{{ isEdicao ? 'Atualize os dados da tarefa abaixo.' : 'Preencha os campos para criar uma nova tarefa.' }}</p>
+      </div>
+
+      <div *ngIf="mensagem" class="alert" [ngClass]="'alert-' + mensagem.tipo">
+        {{ mensagem.texto }}
+      </div>
+
+      <div *ngIf="carregando" class="loading-state">
+        <div class="spinner"></div>
+        <p>Carregando dados...</p>
+      </div>
+
+      <form *ngIf="!carregando" [formGroup]="form" (ngSubmit)="salvar()" class="form-card">
+        <!-- Título -->
+        <div class="form-group" [class.error]="campoInvalido('titulo')">
+          <label for="titulo">Título <span class="required">*</span></label>
+          <input
+            id="titulo"
+            type="text"
+            formControlName="titulo"
+            placeholder="Ex: Revisar documentação..."
+            autocomplete="off"
+          />
+          <div *ngIf="campoInvalido('titulo')" class="error-msg">
+            <span *ngIf="form.get('titulo')?.errors?.['required']">Título é obrigatório.</span>
+            <span *ngIf="form.get('titulo')?.errors?.['maxlength']">Máximo de 200 caracteres.</span>
+          </div>
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-group" [class.error]="campoInvalido('descricao')">
+          <label for="descricao">Descrição</label>
+          <textarea
+            id="descricao"
+            formControlName="descricao"
+            placeholder="Descreva a tarefa com mais detalhes..."
+            rows="4"
+          ></textarea>
+          <div *ngIf="campoInvalido('descricao')" class="error-msg">
+            <span *ngIf="form.get('descricao')?.errors?.['maxlength']">Máximo de 1000 caracteres.</span>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group" [class.error]="campoInvalido('status')">
+          <label for="status">Status <span class="required">*</span></label>
+          <div class="select-wrapper">
+            <select id="status" formControlName="status">
+              <option value="Pendente">🕐 Pendente</option>
+              <option value="Concluída">✅ Concluída</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="form-actions">
+          <a routerLink="/tarefas" class="btn btn-secondary">Cancelar</a>
+          <button type="submit" class="btn btn-primary" [disabled]="salvando">
+            <span *ngIf="!salvando">{{ isEdicao ? '💾 Salvar Alterações' : '✦ Criar Tarefa' }}</span>
+            <span *ngIf="salvando">Salvando...</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+</div>
