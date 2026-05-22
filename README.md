@@ -248,3 +248,10 @@ Content-Type: application/json
 ## 📝 Licença
 
 Projeto desenvolvido para fins de avaliação técnica — Bootcamp Web Front (Angular + ASP.NET).
+
+---
+
+## 👩‍💻 Desenvolvedora
+
+Jessica Feliciano  
+GitHub: https://github.com/JessicaFeliciano1808
